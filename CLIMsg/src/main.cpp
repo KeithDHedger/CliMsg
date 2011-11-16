@@ -42,7 +42,7 @@ void send_message(char *text)
 
 	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
 		{
-			perror("msgsnd");
+			fprintf(stderr,"Can't send message :(\n");
 			exit(1);
 		}
 }
@@ -51,8 +51,6 @@ void send_message(char *text)
 void read_message()
 {
 	int retcode;
-
-	buffer.mtext[0]=0;
 
 	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,1,IPC_NOWAIT);
 
@@ -70,8 +68,9 @@ int main(int argc, char *argv[])
 	key_t key;
 
 	buffer.mtype=1;
+	buffer.mtext[0]=0;
 
-	if(argc == 1)
+	if(argc==1)
 		usage();
 
 	/* Create unique key via call to ftok() */
@@ -100,7 +99,6 @@ int main(int argc, char *argv[])
 				usage();
 		}
 
-fprintf(stderr,"bugger\n");
 	return(0);
 }
 
