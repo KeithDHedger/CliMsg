@@ -1,79 +1,108 @@
-
-//Mon 31 Jul 2006 12:30:55 BST 
-//
-//CLIMsg
-//
+/*****************************************************************************
+ Excerpt from "Linux Programmer's Guide - Chapter 6"
+ (C)opyright 1994-1995, Scott Burkett
+ ***************************************************************************** 
+ MODULE: msgtool.c
+ *****************************************************************************
+ A command line tool for tinkering with SysV style Message Queues
+ *****************************************************************************/
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <getopt.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <string.h>
 
-#define VERSION "0.0.0"
-#define UNKNOWNARG -100
+#define MAX_SEND_SIZE 80
 
-struct option long_options[] =
-	{
-		{"long1",1,0,'l'},
-		{"version",0,0,'v'},
-		{"help",0,0,'?'},
-		{0, 0, 0, 0}
-	};
+struct mymsgbuf {
+	long mtype;
+	char mtext[MAX_SEND_SIZE];
+};
 
-void printhelp(void)
+int queueID;
+mymsgbuf buffer;
+
+void usage(void)
 {
-printf("Usage: climsg [OPTION]\n"
-	"A CLI application\n"
-	" -l, --long1	Do somthing good\n"
-	" -v, --version	output version information and exit\n"
-	" -h, -?, --help	print this help\n\n"
-	"Report bugs to kdhedger@yahoo.co.uk\n"
-	);
+	fprintf(stderr, "msgtool - A utility for tinkering with msg queues\n");
+	fprintf(stderr, "\nUSAGE: msgtool (s)end <type> <messagetext>\n");
+	fprintf(stderr, "	       (r)ecv <type>\n");
+	fprintf(stderr, "	       (d)elete\n");
+	fprintf(stderr, "	       (m)ode <octal mode>\n");
+	exit(1);
 }
 
-int main(int argc, char **argv)
+
+void send_message(char *text)
 {
-	int c;
-	while (1)
+	strcpy(buffer.mtext,text);
+
+	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
 		{
-		int option_index = 0;
-		c = getopt_long (argc, argv, "v?h:l:",long_options, &option_index);
-		if (c == -1)
-			break;
+			perror("msgsnd");
+			exit(1);
+		}
+}
 
-		switch (c)
-			{
-			case 'l':
-				printf("Arg=%s\n",optarg);
-				break;
-		
-			case 'v':
-				printf("climsg %s\n",VERSION);
-				return 0;
-				break;
 
-			case '?':
-			case 'h':
-				printhelp();
-				return 0;
+void read_message()
+{
+	int retcode;
+
+	buffer.mtext[0]=0;
+
+	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,1,IPC_NOWAIT);
+
+	if(retcode>1)
+		printf("%s\n",buffer.mtext);
+}
+
+void remove_queue()
+{
+	msgctl(queueID,IPC_RMID,0);
+}
+
+int main(int argc, char *argv[])
+{
+	key_t key;
+
+	buffer.mtype=1;
+
+	if(argc == 1)
+		usage();
+
+	/* Create unique key via call to ftok() */
+	key=ftok(argv[0],'k');
+
+	/* Open the queue - create if necessary */
+	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
+		{
+			perror("msgget");
+			exit(1);
+		}
+
+	switch(tolower(argv[1][0]))
+		{
+			case 's':
+				send_message(argv[2]);
 				break;
+			case 'r':
+				read_message(); 
+				break;
+			case 'd':
+				remove_queue(); 
+				break;	
 
 			default:
-				fprintf(stderr,"?? Unknown argument ??\n");
-				return UNKNOWNARG;
-			break;
-			}
+				usage();
 		}
-	
-	if (optind < argc)
-		{
-		printf("non-option ARGV-elements: ");
-		while (optind < argc)
-			printf("%s ", argv[optind++]);
-		printf("\n");
-		}
-	
-	printf("%s\n","Hello World");
-	return 0;
+
+fprintf(stderr,"bugger\n");
+	return(0);
 }
+
+
 
