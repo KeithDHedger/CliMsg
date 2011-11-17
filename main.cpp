@@ -22,7 +22,7 @@
 #include <getopt.h>
 
 #define MAX_SEND_SIZE 256
-#define VERSION "0.0.4"
+#define VERSION "0.0.5"
 #define UNKNOWNARG -100
 
 struct option long_options[] =
