@@ -22,7 +22,7 @@
 #include <getopt.h>
 
 #define MAX_SEND_SIZE 256
-#define VERSION "0.0.2"
+#define VERSION "0.0.4"
 #define UNKNOWNARG -100
 
 struct option long_options[] =
@@ -56,7 +56,7 @@ void printhelp()
 		" -r, --receive	Receive message (defaults to receiving type 1)\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
-		" -k, --key	Use this key instead of genereted one\n"
+		" -k, --key	Use key [INTEGER] instead of generated one\n"
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
 		"Report bugs to kdhedger@yahoo.co.uk\n"

@@ -14,3 +14,6 @@ man1_MANS = ../resources/man/climsg.1
 
 bin_PROGRAMS = climsg
 
+install-exec-local:
+	strip $(DESTDIR)$(bindir)/climsg
+
