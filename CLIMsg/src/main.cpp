@@ -21,7 +21,7 @@
 #include <string.h>
 #include <getopt.h>
 
-#define MAX_SEND_SIZE 80
+#define MAX_SEND_SIZE 256
 #define VERSION "0.0.2"
 #define UNKNOWNARG -100
 
@@ -36,17 +36,18 @@ struct option long_options[] =
 		{0, 0, 0, 0}
 	};
 
-struct mymsgbuf {
-	long mtype;
-	char mtext[MAX_SEND_SIZE];
-};
+struct mymsgbuf
+	{
+		long mtype;
+		char mtext[MAX_SEND_SIZE];
+	};
 
 int		queueID;
 mymsgbuf	buffer;
 int		msgType=1;
 bool		action=false;
 
-void printhelp(void)
+void printhelp()
 {
 	printf("Usage: climsg [OPTION]\n"
 		"A CLI application\n"
@@ -60,7 +61,6 @@ void printhelp(void)
 		);
 }
 
-
 void send_message()
 {
 	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
@@ -69,7 +69,6 @@ void send_message()
 			exit(1);
 		}
 }
-
 
 void read_message()
 {
