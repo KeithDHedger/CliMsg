@@ -20,6 +20,9 @@
 #define VERSION "0.0.0"
 #define UNKNOWNARG -100
 
+#define RECEIVE 0
+#define SEND 1
+
 struct option long_options[] =
 	{
 		{"send",1,0,'s'},
@@ -36,9 +39,10 @@ struct mymsgbuf {
 	char mtext[MAX_SEND_SIZE];
 };
 
-int queueID;
-mymsgbuf buffer;
-int msgType=1;
+int		queueID;
+mymsgbuf	buffer;
+int		msgType=1;
+bool		action=false;
 
 void printhelp(void)
 {
@@ -57,7 +61,8 @@ printf("Usage: climsg [OPTION]\n"
 
 void send_message(char *text)
 {
-	strcpy(buffer.mtext,text);
+//	strcpy(buffer.mtext,text);
+//	buffer.mtype=msgType;
 
 	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
 		{
@@ -70,6 +75,7 @@ void send_message(char *text)
 void read_message()
 {
 	int retcode;
+//	buffer.mtype=msgType;
 
 	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,1,IPC_NOWAIT);
 
@@ -96,8 +102,10 @@ int main(int argc, char **argv)
 			{
 			case 's':
 				printf("Send Arg=%s\n",optarg);
+				action=true;
 				break;
 			case 'r':
+				action=false
 				printf("Xceive Arg=%s\n",optarg);
 				break;
 			case 't':
@@ -106,6 +114,7 @@ int main(int argc, char **argv)
 				break;
 		
 			case 'd':
+				
 				printf("delete message queue\n");
 				return 0;
 				break;
@@ -136,7 +145,11 @@ int main(int argc, char **argv)
 		printf("\n");
 		}
 
-	return 0;
+	if(action==true)
+		send_message;
+	else
+		read_message;
+	
 }
 
 /*
