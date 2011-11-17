@@ -25,6 +25,7 @@ struct option long_options[] =
 		{"send",1,0,'s'},
 		{"receive",1,0,'r'},
 		{"type",1,0,'t'},
+		{"delete",0,0,'d'},
 		{"version",0,0,'v'},
 		{"help",0,0,'?'},
 		{0, 0, 0, 0}
@@ -39,21 +40,14 @@ int queueID;
 mymsgbuf buffer;
 int msgType=1;
 
-void usage(void)
-{
-	fprintf(stderr, "msgtool - A utility for tinkering with msg queues\n");
-	fprintf(stderr, "\nUSAGE: msgtool (s)end <type> <messagetext>\n");
-	fprintf(stderr, "	       (r)ecv <type>\n");
-	fprintf(stderr, "	       (d)elete\n");
-	fprintf(stderr, "	       (m)ode <octal mode>\n");
-	exit(1);
-}
-
 void printhelp(void)
 {
 printf("Usage: climsg [OPTION]\n"
 	"A CLI application\n"
-	" -l, --long1	Do somthing good\n"
+	" -s, --send	Send message\n"
+	" -r, --receive	Receive message\n"
+	" -t, --type	Message type (defaults to 1)\n"
+	" -d, --delete	Delete message queue\n"
 	" -v, --version	output version information and exit\n"
 	" -h, -?, --help	print this help\n\n"
 	"Report bugs to kdhedger@yahoo.co.uk\n"
@@ -94,7 +88,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hs:r:t:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hds:r:t:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -111,6 +105,10 @@ int main(int argc, char **argv)
 				printf("Type Arg=%s msgType=%i\n",optarg,msgType);
 				break;
 		
+			case 'd':
+				printf("delete message queue %s\n",VERSION);
+				return 0;
+				break;
 			case 'v':
 				printf("climsg %s\n",VERSION);
 				return 0;
@@ -141,6 +139,10 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+
+
+ghgfj
+/*
 int mainXX(int argc, char *argv[])
 {
 	key_t key;
@@ -151,10 +153,10 @@ int mainXX(int argc, char *argv[])
 	if(argc==1)
 		usage();
 
-	/* Create unique key via call to ftok() */
+	// Create unique key via call to ftok()
 	key=ftok(argv[0],'k');
 
-	/* Open the queue - create if necessary */
+	// Open the queue - create if necessary
 	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
 		{
 			perror("msgget");
@@ -180,5 +182,5 @@ int mainXX(int argc, char *argv[])
 	return(0);
 }
 
-
+*/
 
