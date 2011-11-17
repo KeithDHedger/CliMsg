@@ -7,6 +7,11 @@
  A command line tool for tinkering with SysV style Message Queues
  *****************************************************************************/
 
+/*****************************************************************************
+ Tweaked by K.D.Hedger 2011
+ kdhedger@yahoo.co.uk
+******************************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -17,7 +22,7 @@
 #include <getopt.h>
 
 #define MAX_SEND_SIZE 80
-#define VERSION "0.0.0"
+#define VERSION "0.0.2"
 #define UNKNOWNARG -100
 
 struct option long_options[] =
@@ -45,8 +50,8 @@ void printhelp(void)
 {
 	printf("Usage: climsg [OPTION]\n"
 		"A CLI application\n"
-		" -s, --send	Send message\n"
-		" -r, --receive	Receive message\n"
+		" -s, --send	Send message [STRING]\n"
+		" -r, --receive	Receive message (defaults to receiving type 1)\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
 		" -v, --version	output version information and exit\n"
@@ -99,22 +104,18 @@ int main(int argc, char **argv)
 		switch (c)
 			{
 			case 's':
-				//printf("Send Arg=%s\n",optarg);
 				strcpy(buffer.mtext,optarg);
 				action=true;
 				break;
 			case 'r':
 				action=false;
-				//printf("Xceive Arg=%s\n",optarg);
 				break;
 			case 't':
 				msgType=atoi(optarg);
-				//printf("Type Arg=%s msgType=%i\n",optarg,msgType);
 				break;
 		
 			case 'd':
 				remove_queue();
-				//printf("delete message queue\n");
 				return 0;
 				break;
 
@@ -151,46 +152,4 @@ int main(int argc, char **argv)
 		read_message();
 	
 }
-
-/*
-int mainXX(int argc, char *argv[])
-{
-	key_t key;
-
-	buffer.mtype=1;
-	buffer.mtext[0]=0;
-
-	if(argc==1)
-		usage();
-
-	// Create unique key via call to ftok()
-	key=ftok(argv[0],'k');
-
-	// Open the queue - create if necessary
-	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
-		{
-			perror("msgget");
-			exit(1);
-		}
-
-	switch(tolower(argv[1][0]))
-		{
-			case 's':
-				send_message(argv[2]);
-				break;
-			case 'r':
-				read_message(); 
-				break;
-			case 'd':
-				remove_queue(); 
-				break;	
-
-			default:
-				usage();
-		}
-
-	return(0);
-}
-
-*/
 
