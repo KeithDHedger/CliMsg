@@ -59,7 +59,7 @@ printf("Usage: climsg [OPTION]\n"
 }
 
 
-void send_message(char *text)
+void send_message()
 {
 //	strcpy(buffer.mtext,text);
 //	buffer.mtype=msgType;
@@ -102,10 +102,11 @@ int main(int argc, char **argv)
 			{
 			case 's':
 				printf("Send Arg=%s\n",optarg);
+				strcpy(buffer.mtext,optarg);
 				action=true;
 				break;
 			case 'r':
-				action=false
+				action=false;
 				printf("Xceive Arg=%s\n",optarg);
 				break;
 			case 't':
@@ -145,10 +146,11 @@ int main(int argc, char **argv)
 		printf("\n");
 		}
 
+	buffer.mtype=msgType;
 	if(action==true)
-		send_message;
+		send_message();
 	else
-		read_message;
+		read_message();
 	
 }
 
