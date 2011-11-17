@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 				printf("Xceive Arg=%s\n",optarg);
 				break;
 			case 't':
-				msgType=strtol(optarg,NULL,10);
+				msgType=atoi(optarg);
 				printf("Type Arg=%s msgType=%i\n",optarg,msgType);
 				break;
 		
@@ -135,8 +135,7 @@ int main(int argc, char **argv)
 			printf("%s ", argv[optind++]);
 		printf("\n");
 		}
-	
-	printf("%s\n","Hello World");
+
 	return 0;
 }
 
