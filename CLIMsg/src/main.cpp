@@ -70,7 +70,7 @@ void read_message()
 {
 	int retcode;
 
-	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,1,IPC_NOWAIT);
+	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,msgType,IPC_NOWAIT);
 
 	if(retcode>1)
 		printf("%s\n",buffer.mtext);
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hds:r:t:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdrs:t:",long_options, &option_index);
 		if (c == -1)
 			break;
 
