@@ -106,9 +106,10 @@ int main(int argc, char **argv)
 				break;
 		
 			case 'd':
-				printf("delete message queue %s\n",VERSION);
+				printf("delete message queue\n");
 				return 0;
 				break;
+
 			case 'v':
 				printf("climsg %s\n",VERSION);
 				return 0;
@@ -139,9 +140,6 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-
-
-ghgfj
 /*
 int mainXX(int argc, char *argv[])
 {
