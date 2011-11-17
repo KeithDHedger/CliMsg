@@ -31,6 +31,7 @@ struct option long_options[] =
 		{"receive",1,0,'r'},
 		{"type",1,0,'t'},
 		{"delete",0,0,'d'},
+		{"key",1,0,'k'},
 		{"version",0,0,'v'},
 		{"help",0,0,'?'},
 		{0, 0, 0, 0}
@@ -55,6 +56,7 @@ void printhelp()
 		" -r, --receive	Receive message (defaults to receiving type 1)\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
+		" -k, --key	Use this key instead of genereted one\n"
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
 		"Report bugs to kdhedger@yahoo.co.uk\n"
@@ -92,11 +94,12 @@ int main(int argc, char **argv)
 
 	buffer.mtype=msgType;
 	buffer.mtext[0]=0;
+	key=ftok(argv[0],'k');
 
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdrs:t:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdrs:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -118,6 +121,10 @@ int main(int argc, char **argv)
 				return 0;
 				break;
 
+			case 'k':
+				key=atoi(optarg);
+				break;
+
 			case 'v':
 				printf("climsg %s\n",VERSION);
 				return 0;
@@ -135,8 +142,6 @@ int main(int argc, char **argv)
 			break;
 			}
 		}
-
-	key=ftok(argv[0],'k');
 
 	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
 		{
