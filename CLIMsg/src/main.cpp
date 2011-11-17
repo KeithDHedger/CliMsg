@@ -20,9 +20,6 @@
 #define VERSION "0.0.0"
 #define UNKNOWNARG -100
 
-#define RECEIVE 0
-#define SEND 1
-
 struct option long_options[] =
 	{
 		{"send",1,0,'s'},
@@ -46,24 +43,21 @@ bool		action=false;
 
 void printhelp(void)
 {
-printf("Usage: climsg [OPTION]\n"
-	"A CLI application\n"
-	" -s, --send	Send message\n"
-	" -r, --receive	Receive message\n"
-	" -t, --type	Message type (defaults to 1)\n"
-	" -d, --delete	Delete message queue\n"
-	" -v, --version	output version information and exit\n"
-	" -h, -?, --help	print this help\n\n"
-	"Report bugs to kdhedger@yahoo.co.uk\n"
-	);
+	printf("Usage: climsg [OPTION]\n"
+		"A CLI application\n"
+		" -s, --send	Send message\n"
+		" -r, --receive	Receive message\n"
+		" -t, --type	Message type (defaults to 1)\n"
+		" -d, --delete	Delete message queue\n"
+		" -v, --version	output version information and exit\n"
+		" -h, -?, --help	print this help\n\n"
+		"Report bugs to kdhedger@yahoo.co.uk\n"
+		);
 }
 
 
 void send_message()
 {
-//	strcpy(buffer.mtext,text);
-//	buffer.mtype=msgType;
-
 	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
 		{
 			fprintf(stderr,"Can't send message :(\n");
@@ -75,7 +69,6 @@ void send_message()
 void read_message()
 {
 	int retcode;
-//	buffer.mtype=msgType;
 
 	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,1,IPC_NOWAIT);
 
@@ -91,6 +84,11 @@ void remove_queue()
 int main(int argc, char **argv)
 {
 	int c;
+	key_t key;
+
+	buffer.mtype=msgType;
+	buffer.mtext[0]=0;
+
 	while (1)
 		{
 		int option_index = 0;
@@ -101,22 +99,22 @@ int main(int argc, char **argv)
 		switch (c)
 			{
 			case 's':
-				printf("Send Arg=%s\n",optarg);
+				//printf("Send Arg=%s\n",optarg);
 				strcpy(buffer.mtext,optarg);
 				action=true;
 				break;
 			case 'r':
 				action=false;
-				printf("Xceive Arg=%s\n",optarg);
+				//printf("Xceive Arg=%s\n",optarg);
 				break;
 			case 't':
 				msgType=atoi(optarg);
-				printf("Type Arg=%s msgType=%i\n",optarg,msgType);
+				//printf("Type Arg=%s msgType=%i\n",optarg,msgType);
 				break;
 		
 			case 'd':
-				
-				printf("delete message queue\n");
+				remove_queue();
+				//printf("delete message queue\n");
 				return 0;
 				break;
 
@@ -137,13 +135,13 @@ int main(int argc, char **argv)
 			break;
 			}
 		}
-	
-	if (optind < argc)
+
+	key=ftok(argv[0],'k');
+
+	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
 		{
-		printf("non-option ARGV-elements: ");
-		while (optind < argc)
-			printf("%s ", argv[optind++]);
-		printf("\n");
+			fprintf(stderr,"Can't create message queue\n");
+			exit(1);
 		}
 
 	buffer.mtype=msgType;
