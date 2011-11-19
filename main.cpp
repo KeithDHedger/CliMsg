@@ -1,29 +1,27 @@
-/*****************************************************************************
- Excerpt from "Linux Programmer's Guide - Chapter 6"
- (C)opyright 1994-1995, Scott Burkett
- ***************************************************************************** 
- MODULE: msgtool.c
- *****************************************************************************
- A command line tool for tinkering with SysV style Message Queues
- *****************************************************************************/
-
-/*****************************************************************************
- Tweaked by K.D.Hedger 2011
- kdhedger@yahoo.co.uk
-******************************************************************************/
+/************************************************************************
+*									*
+* SysV message queue send/receive					*
+*									*
+* K.D.Hedger 2011							*
+*									*
+* kdhedger@yahoo.co.uk							*
+*									*
+************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
 #include <sys/msg.h>
 #include <string.h>
 #include <getopt.h>
 
+#define APPNAME "climsg"
+
+#define ALLOK 0
 #define MAX_MSG_SIZE 256
 #define VERSION "0.0.6"
-#define UNKNOWNARG -100
+#define UNKNOWNARG 1
+#define NOMAKEQUEUE 2
+#define NOSENDMSG 3
 
 struct option long_options[] =
 	{
@@ -50,9 +48,9 @@ bool		action=false;
 
 void printHelp()
 {
-	printf("Usage: climsg [OPTION]\n"
+	printf("Usage: %s [OPTION] [TEXT]\n"
 		"A CLI application\n"
-		" -s, --send	Send message [STRING]\n"
+		" -s, --send	Send message [TEXT]\n"
 		" -r, --receive	Receive message (defaults to receiving type 1)\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
@@ -60,7 +58,7 @@ void printHelp()
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
 		"Report bugs to kdhedger@yahoo.co.uk\n"
-		);
+		,APPNAME);
 }
 
 void sendMsg()
@@ -68,7 +66,7 @@ void sendMsg()
 	if((msgsnd(queueID,&buffer,strlen(buffer.mText)+1,0))==-1)
 		{
 			fprintf(stderr,"Can't send message :(\n");
-			exit(1);
+			exit(NOSENDMSG);
 		}
 }
 
@@ -146,7 +144,7 @@ int main(int argc, char **argv)
 	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
 		{
 			fprintf(stderr,"Can't create message queue\n");
-			exit(1);
+			exit(NOMAKEQUEUE);
 		}
 
 	buffer.mType=msgType;
@@ -154,6 +152,8 @@ int main(int argc, char **argv)
 		sendMsg();
 	else
 		readMsg();
+
+	return(ALLOK);
 	
 }
 
