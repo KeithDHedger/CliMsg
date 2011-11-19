@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Send a basic message:Hello World 1"
+./climsg -s "Hello World 1"
+echo "And again:Hello World 2"
+./climsg -s "Hello World 2"
+echo "Send a type 56 (for instance) message:Hello World from type 56"
+./climsg -s  "Hello World from type 56" -t 56
+echo "Set the key and send message:Are you the keymaster?"
+./climsg -s "Are you the keymaster?" -k 12345
+

@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 		
 			case 'd':
 				removeQ();
-				return 0;
+				return ALLOK;
 				break;
 
 			case 'k':
