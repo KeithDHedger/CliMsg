@@ -1,13 +1,19 @@
 PROGRAM=climsg
-PREFIX=/usr/local
+SOURCES=main.cpp
 
-all:
-	gcc -Wall main.cpp -o ./$(PROGRAM)
-	strip ./$(PROGRAM)
+ifeq ($(strip $(PREFIX)),)
+	PREFIX=/usr/local
+endif
+
+CXXFLAGS=-O3
+
+$(PROGRAM):$(SOURCES)
+	g++ -o $(PROGRAM) $(SOURCES) $(CXXFLAGS)
 
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $(PROGRAM) $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
+	strip $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
 
 uninstall:
 	rm $(DESTDIR)$(PREFIX)/bin/$(PROGRAM)
