@@ -15,10 +15,11 @@
 #include <getopt.h>
 
 #define APPNAME "climsg"
+#define VERSION "0.0.7"
+
+#define MAX_MSG_SIZE 256
 
 #define ALLOK 0
-#define MAX_MSG_SIZE 256
-#define VERSION "0.0.6"
 #define UNKNOWNARG 1
 #define NOMAKEQUEUE 2
 #define NOSENDMSG 3
