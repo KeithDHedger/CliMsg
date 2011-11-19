@@ -21,8 +21,8 @@
 #include <string.h>
 #include <getopt.h>
 
-#define MAX_SEND_SIZE 256
-#define VERSION "0.0.5"
+#define MAX_MSG_SIZE 256
+#define VERSION "0.0.6"
 #define UNKNOWNARG -100
 
 struct option long_options[] =
@@ -37,18 +37,18 @@ struct option long_options[] =
 		{0, 0, 0, 0}
 	};
 
-struct mymsgbuf
+struct msgBuffer
 	{
-		long mtype;
-		char mtext[MAX_SEND_SIZE];
+		long mType;
+		char mText[MAX_MSG_SIZE];
 	};
 
 int		queueID;
-mymsgbuf	buffer;
+msgBuffer	buffer;
 int		msgType=1;
 bool		action=false;
 
-void printhelp()
+void printHelp()
 {
 	printf("Usage: climsg [OPTION]\n"
 		"A CLI application\n"
@@ -63,26 +63,26 @@ void printhelp()
 		);
 }
 
-void send_message()
+void sendMsg()
 {
-	if((msgsnd(queueID,&buffer,strlen(buffer.mtext)+1,0))==-1)
+	if((msgsnd(queueID,&buffer,strlen(buffer.mText)+1,0))==-1)
 		{
 			fprintf(stderr,"Can't send message :(\n");
 			exit(1);
 		}
 }
 
-void read_message()
+void readMsg()
 {
 	int retcode;
 
-	retcode=msgrcv(queueID,&buffer,MAX_SEND_SIZE,msgType,IPC_NOWAIT);
+	retcode=msgrcv(queueID,&buffer,MAX_MSG_SIZE,msgType,IPC_NOWAIT);
 
 	if(retcode>1)
-		printf("%s\n",buffer.mtext);
+		printf("%s\n",buffer.mText);
 }
 
-void remove_queue()
+void removeQ()
 {
 	msgctl(queueID,IPC_RMID,0);
 }
@@ -92,8 +92,8 @@ int main(int argc, char **argv)
 	int c;
 	key_t key;
 
-	buffer.mtype=msgType;
-	buffer.mtext[0]=0;
+	buffer.mType=msgType;
+	buffer.mText[0]=0;
 	key=ftok(argv[0],'k');
 
 	while (1)
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		switch (c)
 			{
 			case 's':
-				strcpy(buffer.mtext,optarg);
+				strcpy(buffer.mText,optarg);
 				action=true;
 				break;
 			case 'r':
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 				break;
 		
 			case 'd':
-				remove_queue();
+				removeQ();
 				return 0;
 				break;
 
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
 			case '?':
 			case 'h':
-				printhelp();
+				printHelp();
 				return 0;
 				break;
 
@@ -149,11 +149,11 @@ int main(int argc, char **argv)
 			exit(1);
 		}
 
-	buffer.mtype=msgType;
+	buffer.mType=msgType;
 	if(action==true)
-		send_message();
+		sendMsg();
 	else
-		read_message();
+		readMsg();
 	
 }
 
