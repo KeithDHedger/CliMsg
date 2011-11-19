@@ -126,13 +126,13 @@ int main(int argc, char **argv)
 
 			case 'v':
 				printf("climsg %s\n",VERSION);
-				return 0;
+				return ALLOK;
 				break;
 
 			case '?':
 			case 'h':
 				printHelp();
-				return 0;
+				return ALLOK;
 				break;
 
 			default:
