@@ -23,6 +23,7 @@
 #define UNKNOWNARG 1
 #define NOMAKEQUEUE 2
 #define NOSENDMSG 3
+#define WAIT_MSG 0
 
 struct option long_options[] =
 	{
@@ -31,6 +32,7 @@ struct option long_options[] =
 		{"type",1,0,'t'},
 		{"delete",0,0,'d'},
 		{"key",1,0,'k'},
+		{"wait",0,0,'w'},
 		{"version",0,0,'v'},
 		{"help",0,0,'?'},
 		{0, 0, 0, 0}
@@ -46,6 +48,7 @@ int		queueID;
 msgBuffer	buffer;
 int		msgType=1;
 bool		action=false;
+int		receiveType=IPC_NOWAIT;
 
 void printHelp()
 {
@@ -56,6 +59,7 @@ void printHelp()
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
+		" -w, --wait	Wait for message to arrive (blocking)\n"
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
 		"Report bugs to kdhedger@yahoo.co.uk\n"
@@ -75,7 +79,7 @@ void readMsg()
 {
 	int retcode;
 
-	retcode=msgrcv(queueID,&buffer,MAX_MSG_SIZE,msgType,IPC_NOWAIT);
+	retcode=msgrcv(queueID,&buffer,MAX_MSG_SIZE,msgType,receiveType);
 
 	if(retcode>1)
 		printf("%s\n",buffer.mText);
@@ -98,7 +102,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdrs:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdrws:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -118,6 +122,10 @@ int main(int argc, char **argv)
 			case 'd':
 				removeQ();
 				return ALLOK;
+				break;
+
+			case 'w':
+				receiveType=WAIT_MSG;
 				break;
 
 			case 'k':
