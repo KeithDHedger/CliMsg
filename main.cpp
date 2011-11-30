@@ -17,7 +17,7 @@
 #define APPNAME "climsg"
 #define VERSION "0.0.7"
 
-#define MAX_MSG_SIZE 256
+#define MAX_MSG_SIZE 1024
 
 #define ALLOK 0
 #define UNKNOWNARG 1
@@ -93,11 +93,11 @@ void removeQ()
 int main(int argc, char **argv)
 {
 	int c;
-	key_t key;
+	int key;
 
 	buffer.mType=msgType;
 	buffer.mText[0]=0;
-	key=ftok(argv[0],'k');
+	key=0xdeadbeef;
 
 	while (1)
 		{
