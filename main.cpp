@@ -54,8 +54,7 @@ void printHelp()
 {
 	printf("Usage: %s [OPTION] [TEXT]\n"
 		"A CLI application\n"
-		" -s, --send	Send message [TEXT]\n"
-		" -r, --receive	Receive message (defaults to receiving type 1)\n"
+		" -s, --send	Send message [TEXT] (defaults to receive)\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
@@ -102,7 +101,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdrws:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdws:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -112,9 +111,7 @@ int main(int argc, char **argv)
 				strcpy(buffer.mText,optarg);
 				action=true;
 				break;
-			case 'r':
-				action=false;
-				break;
+
 			case 't':
 				msgType=atoi(optarg);
 				break;

@@ -8,4 +8,6 @@ echo "Send a type 56 (for instance) message:Hello World from type 56"
 ./climsg -s  "Hello World from type 56" -t 56
 echo "Set the key and send message:Are you the keymaster?"
 ./climsg -s "Are you the keymaster?" -k 12345
-
+echo "Press a key to send wake up message"
+read
+./climsg -s "Wakey, Wakey!"
