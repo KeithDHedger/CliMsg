@@ -114,21 +114,25 @@ int main(int argc, char **argv)
 				action=true;
 				break;
 
+			case 'r':
+				repeat=true;
+				break;
+
 			case 't':
 				msgType=atoi(optarg);
 				break;
 		
-			case 'd':
-				removeQ();
-				return ALLOK;
-				break;
-
 			case 'w':
 				receiveType=WAIT_MSG;
 				break;
 
 			case 'k':
 				key=atoi(optarg);
+				break;
+
+			case 'd':
+				removeQ();
+				return ALLOK;
 				break;
 
 			case 'v':
@@ -159,7 +163,11 @@ int main(int argc, char **argv)
 	if(action==true)
 		sendMsg();
 	else
-		readMsg();
+		{
+			readMsg();
+			if (repeat==true)
+				sendMsg();
+		}
 
 	return(ALLOK);
 	
