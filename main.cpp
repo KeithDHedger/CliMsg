@@ -15,7 +15,7 @@
 #include <getopt.h>
 
 #define APPNAME "climsg"
-#define VERSION "0.0.7"
+#define VERSION "0.1.0"
 
 #define MAX_MSG_SIZE 1024
 
