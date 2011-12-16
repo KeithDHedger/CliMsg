@@ -30,7 +30,6 @@ struct option long_options[] =
 		{"send",1,0,'s'},
 		{"repeat",0,0,'r'},
 		{"type",1,0,'t'},
-		{"delete",0,0,'d'},
 		{"key",1,0,'k'},
 		{"wait",0,0,'w'},
 		{"version",0,0,'v'},
@@ -58,7 +57,6 @@ void printHelp()
 		" -s, --send	Send message [TEXT] (defaults to receive)\n"
 		" -r, --repeat	Print received message and resend\n"
 		" -t, --type	Message type (defaults to 1)\n"
-		" -d, --delete	Delete message queue\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
 		" -w, --wait	Wait for message to arrive (blocking)\n"
 		" -v, --version	output version information and exit\n"
@@ -84,11 +82,6 @@ void readMsg()
 
 	if(retcode>1)
 		printf("%s\n",buffer.mText);
-}
-
-void removeQ()
-{
-	msgctl(queueID,IPC_RMID,0);
 }
 
 int main(int argc, char **argv)
@@ -128,11 +121,6 @@ int main(int argc, char **argv)
 
 			case 'k':
 				key=atoi(optarg);
-				break;
-
-			case 'd':
-				removeQ();
-				return ALLOK;
 				break;
 
 			case 'v':
