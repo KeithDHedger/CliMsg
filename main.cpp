@@ -29,6 +29,7 @@ struct option long_options[] =
 	{
 		{"send",1,0,'s'},
 		{"repeat",0,0,'r'},
+		{"all",0,0,'a'},
 		{"type",1,0,'t'},
 		{"key",1,0,'k'},
 		{"wait",0,0,'w'},
@@ -49,6 +50,8 @@ int		msgType=1;
 bool		action=false;
 int		receiveType=IPC_NOWAIT;
 bool		repeat=false;
+bool		printAll=false;
+bool		allDone=false;
 
 void printHelp()
 {
@@ -56,6 +59,7 @@ void printHelp()
 		"A CLI application\n"
 		" -s, --send	Send message [TEXT] (defaults to receive)\n"
 		" -r, --repeat	Print received message and resend\n"
+		" -a, --all	Print all messages in queue\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
 		" -w, --wait	Wait for message to arrive (blocking)\n"
@@ -82,6 +86,8 @@ void readMsg()
 
 	if(retcode>1)
 		printf("%s\n",buffer.mText);
+	else
+		allDone=true;
 }
 
 int main(int argc, char **argv)
@@ -96,7 +102,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdwrs:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdwras:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -109,6 +115,10 @@ int main(int argc, char **argv)
 
 			case 'r':
 				repeat=true;
+				break;
+
+			case 'a':
+				printAll=true;
 				break;
 
 			case 't':
@@ -148,6 +158,16 @@ int main(int argc, char **argv)
 		}
 
 	buffer.mType=msgType;
+	
+	if (printAll==true)
+		{
+			while(allDone==false)
+				{
+					readMsg();
+				}
+			return(ALLOK);
+		}
+
 	if(action==true)
 		sendMsg();
 	else
