@@ -28,7 +28,7 @@
 struct option long_options[] =
 	{
 		{"send",1,0,'s'},
-		{"receive",1,0,'r'},
+		{"repeat",0,0,'r'},
 		{"type",1,0,'t'},
 		{"delete",0,0,'d'},
 		{"key",1,0,'k'},
@@ -49,12 +49,14 @@ msgBuffer	buffer;
 int		msgType=1;
 bool		action=false;
 int		receiveType=IPC_NOWAIT;
+bool		repeat=false;
 
 void printHelp()
 {
 	printf("Usage: %s [OPTION] [TEXT]\n"
 		"A CLI application\n"
 		" -s, --send	Send message [TEXT] (defaults to receive)\n"
+		" -r, --repeat	Print received message and resend\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -d, --delete	Delete message queue\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
@@ -101,7 +103,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdws:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdwrs:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 

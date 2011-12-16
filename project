@@ -1,0 +1,6 @@
+#!/bin/bash
+
+FILES="main.cpp Makefile"
+gnome-terminal --geometry=100x20+620+400 --working-directory="$PWD"
+gedit $FILES &
+
