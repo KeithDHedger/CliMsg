@@ -3,7 +3,12 @@
 RED='\e[1;31m'
 NORMAL='\e[0;30m'
 BLUE='\e[1;34m' # Blue
+GREEN='\e[1;32m'
 
+echo "--------------------------------"
+echo "A simple demo showing how to send/receive and wait for messages, operates asynchronously with a sub proccess running in the background."
+echo -e "${BLUE}BLUE${NORMAL} messages are info ${RED}RED${NORMAL} messages are what has been recieved by the sub proccess."
+echo "--------------------------------"
 #flush the message queues first
 
 ./climsg -f -k 12345
@@ -11,25 +16,38 @@ BLUE='\e[1;34m' # Blue
 #launch 'receive' as sub process in the background
 #wait for messages
 (
-	./climsg -w
-	./climsg -w
+#	echo -e "$RED"
+	x=$(./climsg -w)
+	echo -e "${RED}$x"
+	x=$(./climsg -w)
+	echo -e "${RED}$x"
+
 #wait for type '56' message
-	./climsg -t 56 -w
+	x=$(./climsg -t 56 -w)
+	echo -e "${RED}$x"
+	
 #wait for message with key=12345
 	message=$(./climsg -w -k 12345)
 	if [ "$message" = "Are you the keymaster?" ];then
+#reply with key =12345
 		./climsg -s "Yes I am the keymaster!" -k 12345
 	fi
+#	echo -e "$NORMAL"
 )&
 
-echo "Send a basic message"
+#send hello worrld messages
+echo -e "${BLUE}Send a basic message"
 ./climsg -s "Hello World 1"
-echo "And again"
+echo -e "${BLUE}And again"
 ./climsg -s "Hello World 2"
-echo "Send a (for instance) type 56  message"
+#send a 'typed' message
+echo -e "${BLUE}Send a (for instance) type 56  message"
 ./climsg -s  "Hello World from type 56" -t 56
+#slepp for one second and then send a message with key 12345
 sleep 1
-echo "Set the key and send message"
+echo -e "${BLUE}Set the key and send message${NORMAL}"
 ./climsg -s "Are you the keymaster?" -k 12345
-./climsg -w -k 12345
-echo "Well thats all right then"
+#wait for the reply and echo it
+x=$(./climsg -w -k 12345)
+echo -e "${BLUE}Recieved this message ${GREEN}\"$x\" ${BLUE}from the sub proccess"
+echo -e "${NORMAL}Well thats all right then!"
