@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+RED='\e[1;31m'
+NORMAL='\e[0;30m'
+BLUE='\e[1;34m' # Blue
+
+#flush the message queues first
+
+./climsg -f -k 12345
+./climsg -f
+#launch 'receive' as sub process in the background
+#wait for messages
+(
+	./climsg -w
+	./climsg -w
+#wait for type '56' message
+	./climsg -t 56 -w
+#wait for message with key=12345
+	message=$(./climsg -w -k 12345)
+	if [ "$message" = "Are you the keymaster?" ];then
+		./climsg -s "Yes I am the keymaster!" -k 12345
+	fi
+)&
+
+echo "Send a basic message"
+./climsg -s "Hello World 1"
+echo "And again"
+./climsg -s "Hello World 2"
+echo "Send a (for instance) type 56  message"
+./climsg -s  "Hello World from type 56" -t 56
+sleep 1
+echo "Set the key and send message"
+./climsg -s "Are you the keymaster?" -k 12345
+./climsg -w -k 12345
+echo "Well thats all right then"
