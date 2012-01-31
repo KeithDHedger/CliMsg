@@ -1,16 +1,60 @@
 .\" climsg
-.TH "climsg" "1" "0.1.0" "K.D.Hedger" "User Commands"
+.TH "climsg" "1" "0.1.1" "K.D.Hedger" "User Commands"
 .SH "NAME"
-climsg \- manual page for climsg version 0.1.0
+climsg \- manual page for climsg version 0.1.1
 .SH "SYNOPSIS"
 Climsg \- A simple SysV message queue system
 .SH "DESCRIPTION"
+Climsg is a simple inter\-proccess communication program, mostly desienged for scripts that don't usually have such a thing.
+.br 
+Messages can be sent, received, repeated or flushed from the queue, the messgae system is handled by the kernel, so any modern kernel should be fine, if you have compiled your own kernel you may have to 'opt in' the message system.
+.br 
+Messages can use the default 'key' or can specify a custom 'key' allowing for semi\-private comunications, alse message 'types' can be used, a type is any integer > 0, only messages of the correct type will be peeled of from the queue and printed to stdout, type 0 is a special case and is use to receive any message regardless of 'type' of course the 'key' must match as well.
+.br 
+.SH "OPTIONS"
+.TP 
+\fB\-s,\-\-send\fR [ARG]
+Send message [ARG] messages with spaces should of course be escaped.
+Deafault is to receve a message.
+.TP 
+\fB\-r,\-\-repeat\fR
+Print next message to stdout and add back to the end of the queue
+.TP 
+\fB\-a,\-\-all\fR
+Peel off and print ALL available messages to stdout
+.TP 
+\fB\-t,\-\-type\fR [ARG]
+Set the message type, message types are just integers larger than 0 and default to 1, setting the type allows the receiving program to only get specific messages.
+A 'type' of 0 will get the next message in the queue regardless of type.
+.TP 
+\fB\-k,\-\-key\fR [ARG]
+A key allows for semi\-private messaging although messages are sent in clear text and can be seen with 'ps' 'top' etc, only requests with the correct 'key' can peel a messagse of of the queue, so both the 'send' climsg and the 'receive' climsg must specify the same value for [ARG]. The key is any large integer and defaults to 0xdeadbeef.
+.TP 
+\fB\-w,\-\-wait\fR
+Wait until a message is available (BLOCKING), deafault is to just return if no message was waiting.
+.TP 
+\fB\-f,\-\-flush\fR
+Quietly remove messages from queue regardless of type, only for messages with a specific 'key'.
+.SH "EXAMPLES"
+.IP 
+climsg \-s "Hello world"
+.br 
+Adds the message "Hello world" to the queue.
+.IP 
 climsg
 .br 
-
-
-.SH "EXAMPLES"
-.LP 
-.LP 
+Prints the next available message.
+.IP 
+climsg \-t 56 \-k 12345678 \-s "Messgae of type 56 to key 12345678"
+.br 
+Send a message with a private key and type of 56
+.IP 
+climsg \-t 56 \-k 12345678
+.br 
+Print the message of 'type' 56 and private 'key' 12345678 to stdout
+.IP 
+clims \-k 12345678 \-f
+.br 
+Flush all messages from the que for 'key' 12345678
 .SH "REPORTING BUGS"
 Report bugs to kdhedger@yahoo.co.uk
