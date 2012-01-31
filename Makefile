@@ -25,5 +25,5 @@ clean:
 	rm -f $(PROGRAM)
 
 pkg:
-	tar -cvzf $(PROGRAM).tgz $(MANPAGE) $(SOURCES) Makefile sendmsgexample receivemsgexample
+	tar -cvzf $(PROGRAM).tgz $(MANPAGE) $(SOURCES) Makefile climsgexample
 
