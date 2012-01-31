@@ -179,6 +179,7 @@ int main(int argc, char **argv)
 	if (flushQueue==true)
 		{
 			allDone=false;
+			msgType=0;
 			while(allDone==false)
 				{
 					retcode=msgrcv(queueID,&buffer,MAX_MSG_SIZE,msgType,receiveType);
