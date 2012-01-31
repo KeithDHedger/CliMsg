@@ -10,5 +10,6 @@ echo "Set the key and receive message"
 ./climsg -k 12345
 echo "Wait for the message to arrive"
 ./climsg -w
-echo "Delete message queue"
-./climsg -d
+
+echo "Flush messages"
+./climsg -f

@@ -11,3 +11,7 @@ echo "Set the key and send message:Are you the keymaster?"
 echo "Press a key to send wake up message"
 read
 ./climsg -s "Wakey, Wakey!"
+echo "Send messages that will be quietly flushed"
+./climsg -s "No one will see this"
+./climsg -s "Or this"
+
