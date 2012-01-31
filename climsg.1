@@ -11,6 +11,7 @@ Messages can be sent, received, repeated or flushed from the queue, the messgae 
 .br 
 Messages can use the default 'key' or can specify a custom 'key' allowing for semi\-private comunications, alse message 'types' can be used, a type is any integer > 0, only messages of the correct type will be peeled of from the queue and printed to stdout, type 0 is a special case and is use to receive any message regardless of 'type' of course the 'key' must match as well.
 .br 
+Queues are FIFO.
 .SH "OPTIONS"
 .TP 
 \fB\-s,\-\-send\fR [ARG]
