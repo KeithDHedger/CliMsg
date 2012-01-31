@@ -33,6 +33,7 @@ struct option long_options[] =
 		{"type",1,0,'t'},
 		{"key",1,0,'k'},
 		{"wait",0,0,'w'},
+		{"flush",0,0,'f'},
 		{"version",0,0,'v'},
 		{"help",0,0,'?'},
 		{0, 0, 0, 0}
@@ -52,6 +53,7 @@ int		receiveType=IPC_NOWAIT;
 bool		repeat=false;
 bool		printAll=false;
 bool		allDone=false;
+bool		flushQueue=false;
 
 void printHelp()
 {
@@ -60,6 +62,7 @@ void printHelp()
 		" -s, --send	Send message [TEXT] (defaults to receive)\n"
 		" -r, --repeat	Print received message and resend\n"
 		" -a, --all	Print all messages in queue\n"
+		" -f, --flush	Flush message queue quietly\n"
 		" -t, --type	Message type (defaults to 1)\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
 		" -w, --wait	Wait for message to arrive (blocking)\n"
@@ -94,6 +97,7 @@ int main(int argc, char **argv)
 {
 	int c;
 	int key;
+	int retcode;
 
 	buffer.mType=msgType;
 	buffer.mText[0]=0;
@@ -102,7 +106,7 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdwras:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hdwfras:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -119,6 +123,10 @@ int main(int argc, char **argv)
 
 			case 'a':
 				printAll=true;
+				break;
+
+			case 'f':
+				flushQueue=true;
 				break;
 
 			case 't':
@@ -164,6 +172,18 @@ int main(int argc, char **argv)
 			while(allDone==false)
 				{
 					readMsg();
+				}
+			return(ALLOK);
+		}
+
+	if (flushQueue==true)
+		{
+			allDone=false;
+			while(allDone==false)
+				{
+					retcode=msgrcv(queueID,&buffer,MAX_MSG_SIZE,msgType,receiveType);
+					if(retcode<=1)
+						allDone=true;
 				}
 			return(ALLOK);
 		}
