@@ -38,8 +38,10 @@ echo "--------------------------------"
 #send hello worrld messages
 echo -e "${BLUE}Send a basic message"
 ./climsg -s "Hello World 1"
+sleep 1
 echo -e "${BLUE}And again"
 ./climsg -s "Hello World 2"
+sleep 1
 #send a 'typed' message
 echo -e "${BLUE}Send a (for instance) type 56  message"
 ./climsg -s  "Hello World from type 56" -t 56
