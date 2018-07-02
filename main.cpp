@@ -45,15 +45,16 @@ struct msgBuffer
 		char mText[MAX_MSG_SIZE];
 	};
 
-int		queueID;
+int			queueID;
 msgBuffer	buffer;
-int		msgType=1;
+int			msgType=1;
 bool		action=false;
-int		receiveType=IPC_NOWAIT;
+int			receiveType=IPC_NOWAIT;
 bool		repeat=false;
 bool		printAll=false;
 bool		allDone=false;
 bool		flushQueue=false;
+int			setPerms=0660;
 
 void printHelp()
 {
@@ -66,6 +67,7 @@ void printHelp()
 		" -t, --type	Message type (defaults to 1)\n"
 		" -k, --key	Use key [INTEGER] instead of generated one\n"
 		" -w, --wait	Wait for message to arrive (blocking)\n"
+		" -p, --permissions	Set perms on queue ( default 0660 )\n"
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
 		"Report bugs to kdhedger@yahoo.co.uk\n"
@@ -106,12 +108,15 @@ int main(int argc, char **argv)
 	while (1)
 		{
 		int option_index = 0;
-		c = getopt_long (argc, argv, "v?hdwfras:t:k:",long_options, &option_index);
+		c = getopt_long (argc, argv, "v?hewfras:t:k:",long_options, &option_index);
 		if (c == -1)
 			break;
 
 		switch (c)
 			{
+			case 'p':
+				setPerms=atoi(optarg);
+				break;
 			case 's':
 				strcpy(buffer.mText,optarg);
 				action=true;
@@ -158,8 +163,8 @@ int main(int argc, char **argv)
 			break;
 			}
 		}
-
-	if((queueID=msgget(key,IPC_CREAT|0660))==-1)
+//IPC_EXCL
+	if((queueID=msgget(key,IPC_CREAT|setPerms))==-1)
 		{
 			fprintf(stderr,"Can't create message queue\n");
 			exit(NOMAKEQUEUE);
