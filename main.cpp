@@ -1,12 +1,22 @@
-/************************************************************************
-*									*
-* SysV message queue send/receive					*
-*									*
-* K.D.Hedger 2011							*
-*									*
-* kdhedger@yahoo.co.uk							*
-*									*
-************************************************************************/
+/*
+ *
+ * ©K. D. Hedger. Tue 31 Jul 13:14:35 BST 2018 keithdhedger@gmail.com
+
+ * This file (main.cpp) is part of CliMsg.
+
+ * CliMsg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+
+ * CliMsg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with Projects.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,7 +80,7 @@ void printHelp()
 		" -p, --permissions	Set perms on queue ( default 0660 )\n"
 		" -v, --version	output version information and exit\n"
 		" -h, -?, --help	print this help\n\n"
-		"Report bugs to kdhedger@yahoo.co.uk\n"
+		"Report bugs to keithdhedger@gmail.com\n"
 		,APPNAME);
 }
 
