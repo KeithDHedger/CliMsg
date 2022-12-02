@@ -19,7 +19,7 @@
 #
 
 RED='\e[1;31m'
-NORMAL='\e[0;30m'
+NORMAL='\e[0m'
 BLUE='\e[1;34m' # Blue
 GREEN='\e[1;32m'
 
