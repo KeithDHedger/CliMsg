@@ -9,3 +9,6 @@ Messages can use the default 'key' or can specify a custom 'key' allowing for se
 Because the messages are handled by the kernel, messages can be passed to and received back from a chroot environment.
 
 Queues are FIFO and LOCAL only.
+
+BUGS etc.
+kdhedger68713@gmail.com
