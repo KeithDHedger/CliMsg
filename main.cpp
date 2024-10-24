@@ -154,7 +154,8 @@ int main(int argc, char **argv)
 					break;
 
 				case 'k':
-					key=atoi(optarg);
+					//key=atoi(optarg);
+					key=strtol(optarg,NULL,0);
 					break;
 
 				case 'v':
